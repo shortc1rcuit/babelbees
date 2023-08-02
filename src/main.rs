@@ -1,5 +1,5 @@
-use std::io::{self, Write};
 use radix_fmt::*;
+use std::collections::HashMap;
 
 mod coords;
 use coords::Hex;
@@ -7,43 +7,76 @@ use coords::Hex;
 mod bee;
 use bee::Bee;
 
-const BEE: i128 = 11*36*36 + 14*36 + 14;
-const LAST_THREE: i128 = 36*36*36;
-
 fn main() {
-    print!("Bee location: ");
-    io::stdout().flush().expect("Failed to flush buffer");
-    let mut location = String::new();
-    io::stdin()
-        .read_line(&mut location)
-        .expect("Failed to read line");
+    let mut bees: Vec<Bee> = [
+        /*("51d9d3", 10),
+        ("ae9601", 6),
+        ("53363e", 6),
+        ("2a5ebd", 2),
+        ("71665b", 3),
+        ("ea8d18", 10),
+        ("eef37e", 5),
+        ("955e7e", 1),
+        ("2d0fa9", 7),
+        ("e9f33a", 6),
+        ("f66293", 9),
+        ("fd7c4e", 3),*/
+        ("174a4a", 0),
+        ("11158c", 7),
+        ("111588", 5),
+    ]
+    .into_iter()
+    .map(|(a, b)| {
+        let location = i128::from_str_radix(a, 36).expect("Failed to convert radix");
+        let location = Hex { name: location }.to_lattice();
 
-    let location = i128::from_str_radix(&location.trim(), 36).expect("Failed to convert radix");
-    let location = Hex { name: location }.to_lattice();
+        Bee {
+            start: a,
+            location,
+            direction: b,
+            distance: 0,
+        }
+    })
+    .collect();
 
-    print!("Bee direction: ");
-    io::stdout().flush().expect("Failed to flush buffer");
-    let mut direction = String::new();
-    io::stdin()
-        .read_line(&mut direction)
-        .expect("Failed to read line");
+    let mut visited = HashMap::<_, Vec<Bee>>::new();
 
-    let direction = direction.trim().parse().expect("Failed to make an integer");
+    let mut hits = 4;
 
-    let mut bee = Bee {
-        location,
-        direction,
-    };
+    while hits != 0 {
+        for bee in &mut bees {
+            visited
+                .entry(bee.location)
+                .and_modify(|x| {
+                    x.push(*bee);
 
-    loop {
-        bee.shift();
+                    if x.len() == 3 {
+                        println!(
+                            "Location {} visited 3 times.",
+                            radix_36(bee.location.to_hex().name)
+                        );
 
-        let name = bee.location.to_hex().name;
-        
-        if name % LAST_THREE == BEE {
-            break;
+                        println!(
+                            "Bee 1 started at {} and moved {} steps.",
+                            x[0].start, x[0].distance
+                        );
+                        println!(
+                            "Bee 2 started at {} and moved {} steps.",
+                            x[1].start, x[1].distance
+                        );
+                        println!(
+                            "Bee 3 started at {} and moved {} steps.",
+                            x[2].start, x[2].distance
+                        );
+
+                        println!();
+
+                        hits -= 1;
+                    }
+                })
+                .or_insert(vec![*bee]);
+
+            bee.shift();
         }
     }
-
-    println!("Bee found flower at {}", radix_36(bee.location.to_hex().name));
 }

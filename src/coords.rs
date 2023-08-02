@@ -1,4 +1,4 @@
-#[derive(PartialEq, Debug)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Lattice {
     pub x: i128,
     pub y: i128,
@@ -55,7 +55,7 @@ impl Hex {
 }
 
 impl Lattice {
-    pub fn to_hex(&self) -> Hex {
+    pub fn to_hex(self) -> Hex {
         let (x, y) = (self.x, self.y);
 
         if x == 0 && y == 0 {

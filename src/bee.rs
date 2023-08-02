@@ -1,12 +1,15 @@
 use crate::coords::Lattice;
 
-pub struct Bee {
+#[derive(Debug, Clone, Copy)]
+pub struct Bee<'a> {
+    pub start: &'a str,
     pub location: Lattice,
     //Corresponds to rotating 30 degrees anticlockwise from facing right
     pub direction: u8,
+    pub distance: u32,
 }
 
-impl Bee {
+impl Bee<'_> {
     pub fn shift(&mut self) {
         let (dx, dy) = match self.direction {
             0 => (2, 1),
@@ -26,5 +29,11 @@ impl Bee {
 
         self.location.x += dx;
         self.location.y += dy;
+
+        if self.direction % 2 == 0 {
+            self.distance += 3;
+        } else {
+            self.distance += 2;
+        }
     }
 }
