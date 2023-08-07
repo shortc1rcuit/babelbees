@@ -8,8 +8,33 @@ mod bee;
 use bee::Bee;
 
 fn main() {
+    mini_puzzle();
+}
+
+fn mini_puzzle() {
+    let location = i128::from_str_radix("c0c0c0", 36).expect("Failed to convert radix");
+    let location = Hex { name: location }.to_lattice();
+
+    let mut bee = Bee {
+        start: "c0c0c0",
+        location,
+        direction: 11,
+        distance: 0,
+    };
+
+    let end = i128::from_str_radix("c0c140", 36).expect("Failed to convert radix");
+    let end = Hex { name: end }.to_lattice();
+
+    while bee.location != end {
+        bee.shift();
+    }
+
+    println!("The bee moved {} steps", bee.distance);
+}
+
+fn main_puzzle() {
     let mut bees: Vec<Bee> = [
-        /*("51d9d3", 10),
+        ("51d9d3", 10),
         ("ae9601", 6),
         ("53363e", 6),
         ("2a5ebd", 2),
@@ -20,10 +45,10 @@ fn main() {
         ("2d0fa9", 7),
         ("e9f33a", 6),
         ("f66293", 9),
-        ("fd7c4e", 3),*/
-        ("174a4a", 0),
+        ("fd7c4e", 3),
+        /*("174a4a", 0),
         ("11158c", 7),
-        ("111588", 5),
+        ("111588", 5),*/
     ]
     .into_iter()
     .map(|(a, b)| {
