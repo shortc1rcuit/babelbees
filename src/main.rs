@@ -8,11 +8,12 @@ mod bee;
 use bee::Bee;
 
 fn main() {
+    main_puzzle();
     mini_puzzle();
 }
 
 fn mini_puzzle() {
-    let location = i128::from_str_radix("c0c0c0", 36).expect("Failed to convert radix");
+    let location = i32::from_str_radix("c0c0c0", 36).expect("Failed to convert radix");
     let location = Hex { name: location }.to_lattice();
 
     let mut bee = Bee {
@@ -22,7 +23,7 @@ fn mini_puzzle() {
         distance: 0,
     };
 
-    let end = i128::from_str_radix("c0c140", 36).expect("Failed to convert radix");
+    let end = i32::from_str_radix("c0c140", 36).expect("Failed to convert radix");
     let end = Hex { name: end }.to_lattice();
 
     while bee.location != end {
@@ -52,7 +53,7 @@ fn main_puzzle() {
     ]
     .into_iter()
     .map(|(a, b)| {
-        let location = i128::from_str_radix(a, 36).expect("Failed to convert radix");
+        let location = i32::from_str_radix(a, 36).expect("Failed to convert radix");
         let location = Hex { name: location }.to_lattice();
 
         Bee {

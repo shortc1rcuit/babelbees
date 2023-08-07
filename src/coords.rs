@@ -1,15 +1,15 @@
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Lattice {
-    pub x: i128,
-    pub y: i128,
+    pub x: i32,
+    pub y: i32,
 }
 
 #[derive(PartialEq, Debug)]
 pub struct Hex {
-    pub name: i128,
+    pub name: i32,
 }
 
-fn centred_hex(x: i128) -> i128 {
+fn centred_hex(x: i32) -> i32 {
     3 * x * (x + 1) + 1
 }
 
@@ -98,7 +98,7 @@ impl Lattice {
 mod tests {
     use super::*;
 
-    const TABLE: [(i128, (i128, i128)); 19] = [
+    const TABLE: [(i32, (i32, i32)); 19] = [
         (0, (0, 0)),
         (1, (0, 1)),
         (2, (0, -1)),
